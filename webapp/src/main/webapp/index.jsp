@@ -1,8 +1,8 @@
 <form action="action_page.php">
   <div class="container">
-    <h1>👋Hi there! Welcome to group 9 project</h1>
-    <p>Please fill in this form📃 to create an account.</p>
-    <hr />
+    <h1>Hi there! Welcome to group 9 project</h1>
+    <p>Please fill in this form to create an account.</p>
+    <hr/>
 
     <label for="Name"><b>Enter Name</b></label>
     <input
@@ -63,5 +63,5 @@
     <p>Already have an account? <a href="#">Sign in</a>.</p>
   </div>
 
-  <h1>Thank You🙏</h1>
+  <h1>Thank You</h1>
 </form>
