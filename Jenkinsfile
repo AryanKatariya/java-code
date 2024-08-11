@@ -26,5 +26,13 @@ pipeline {
                 sh "mvn test"
             }
         }
+        stage('Transfer WAR file') {
+            steps {
+                script {
+                    def warFile = 'webapp/target/*.war'
+                    sh "scp -o StrictHostKeyChecking=no ${warFile} dockeradmin@172.31.44.98:/home/dockeradmin"
+                }
+            }
+        }    
     }
 }
