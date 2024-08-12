@@ -32,7 +32,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: docker_ssh, passwordVariable: 'SERVER_PASS', usernameVariable: 'SERVER_USER')]) {
                         sh 'apt-get update && apt-get install -y sshpass'
                         def warFile = 'webapp/target/*.war'
-                        sh "sshpass -p ${SERVER_PASS} scp -o StrictHostKeyChecking=no ${warFile} ${SERVER_USER}@$172.31.44.98:/home/dockeradmin"
+                        sh "sshpass -p ${SERVER_PASS} scp -o StrictHostKeyChecking=no ${warFile} ${SERVER_USER}@172.31.44.98:/home/dockeradmin"
                         //sh "scp -o StrictHostKeyChecking=no ${warFile} dockeradmin@172.31.44.98:/home/dockeradmin"
                     }
                 }
