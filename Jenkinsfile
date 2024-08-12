@@ -29,14 +29,15 @@ pipeline {
         stage('Transfer WAR file') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: docker_ssh, passwordVariable: 'SERVER_PASS', usernameVariable: 'SERVER_USER')]) {
-                        sh 'apt-get update && apt-get install -y sshpass'
-                        def warFile = 'webapp/target/*.war'
-                        sh "sshpass -p ${SERVER_PASS} scp -o StrictHostKeyChecking=no ${warFile} ${SERVER_USER}@172.31.44.98:/home/dockeradmin"
-                        //sh "scp -o StrictHostKeyChecking=no ${warFile} dockeradmin@172.31.44.98:/home/dockeradmin"
+                    def username = 'dockeradmin'
+                    def password = 'your_password_here'
+
+                    sh 'apt-get update && apt-get install -y sshpass'
+                    def warFile = 'webapp/target/*.war'
+                    sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
                     }
                 }
-            }
-        }    
-    }
+        }
+    }    
 }
+
