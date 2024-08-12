@@ -32,8 +32,8 @@ pipeline {
                     def username = 'dockeradmin'
                     def password = 'your_password_here'
 
-                    sh 'sudo yum update -y'
-                    sh 'sudo yum install -y sshpass'
+                    sh 'sudo -S yum update -y'
+                    sh 'sudo -S yum install -y sshpass'
                     
                     def warFile = 'webapp/target/*.war'
                     sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
