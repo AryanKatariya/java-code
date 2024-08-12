@@ -31,9 +31,19 @@ pipeline {
                 script {
                     def username = 'dockeradmin'
                     def password = 'docker'
+                    def CONTAINER_NAME = 'devops-container'
                     
                     def warFile = 'webapp/target/*.war'
                     sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
+
+                    sh """
+                            sshpass -p ${password} ssh -o StrictHostKeyChecking=no ${username}@172.31.44.98"
+                            docker pull tomcat:8.0
+                            docker run --name ${CONTAINER_NAME} -d -p 8080:8080 tomcat:8.0
+                            docker cp ./*.war ${CONTAINER_NAME}:/usr/local/tomcat/webapps/webapp.war
+                            docker restart ${CONTAINER_NAME}
+                            "
+                        """
                     }
                 }
         }
