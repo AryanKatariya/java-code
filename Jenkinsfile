@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        GITHUB_TOKEN = credentials('github_token')
+        GITHUB_TOKEN = credentials('github_token'
     }
 
     stages {
@@ -38,6 +38,14 @@ pipeline {
                     --prettyPrint''', odcInstallation: 'OWASP-DC'
 
                 dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+            }
+        }
+
+        stage ('SAST - SonarQube') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src'
+                }
             }
         }
 
