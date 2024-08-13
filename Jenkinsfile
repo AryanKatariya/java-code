@@ -28,9 +28,6 @@ pipeline {
                 sh 'trufflehog --json https://$GITHUB_TOKEN@github.com/AryanKatariya/java-code.git > trufflehog_output.json'
             }
         }
-    }
-}
-
 
         stage ('SCA - OWASPDC') {
             steps {
