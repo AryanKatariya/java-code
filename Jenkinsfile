@@ -17,6 +17,12 @@ pipeline {
                 git branch: 'main', credentialsId: 'github_token', url: 'https://github.com/AryanKatariya/java-code.git'
             }
         }
+        
+        stage ('Check secrets') {
+            steps {
+            sh 'trufflehog https://github.com/AryanKatariya/Webgoat-Devsecops.git --json > trufflehog_output.json'
+            }
+        }
 
         stage ('SCA - OWASPDC') {
             steps {
@@ -40,7 +46,7 @@ pipeline {
                 sh "mvn test"
             }
         }
-        stage('Transfer WAR file') {
+        stage('Deploy to server') {
             steps {
                 script {
                     def username = 'dockeradmin'
