@@ -20,7 +20,7 @@ pipeline {
         
         stage ('Check secrets') {
             steps {
-            sh 'trufflehog https://github.com/AryanKatariya/Webgoat-Devsecops.git --json > trufflehog_output.json'
+            sh 'trufflehog https://github.com/AryanKatariya/java-code.git --json > trufflehog_output.json'
             }
         }
 
