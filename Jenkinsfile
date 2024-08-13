@@ -11,11 +11,25 @@ pipeline {
                 cleanWs()
             }
         }
+
         stage('Checkout from SCM') {
             steps {
                 git branch: 'main', credentialsId: 'github_token', url: 'https://github.com/AryanKatariya/java-code.git'
             }
         }
+
+        stage ('SCA - OWASPDC') {
+            steps {
+                dependencyCheck additionalArguments: ''' 
+                    -o "./" 
+                    -s "./"
+                    -f "ALL" 
+                    --prettyPrint''', odcInstallation: 'OWASP-DC'
+
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+            }
+        }
+
         stage('Build application') {
             steps {
                 sh "mvn clean package"
@@ -38,6 +52,8 @@ pipeline {
 
                     sh """
                             sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 '
+                            docker stop devops-container
+                            docker rm devops-container
                             docker pull tomcat:8.0 &&
                             docker run --name devops-container -d -p 8080:8080 tomcat:8.0 &&
                             docker cp ./*.war devops-container:/usr/local/tomcat/webapps/webapp.war &&
