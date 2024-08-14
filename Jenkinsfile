@@ -19,7 +19,15 @@ pipeline {
 
         stage ('DAST - OWASP ZAP') {
             steps {
-                sh 'ssh -o  StrictHostKeyChecking=no ubuntu@172.31.12.108 "ls -a" '
+                def username = 'dockeradmin'
+                def password = 'docker'
+                def CONTAINER_NAME = 'devops-container'
+
+                sh """
+                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 '
+                            ls -a
+                            '
+                """
             }       
         }
 
