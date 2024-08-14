@@ -19,7 +19,7 @@ pipeline {
 
         stage ('DAST - OWASP ZAP') {
             steps {
-                sh 'ssh -o  StrictHostKeyChecking=no ubuntu@3.7.248.45 "ls -a" '
+                sh 'ssh -o  StrictHostKeyChecking=no ubuntu@172.31.12.108 "ls -a" '
             }       
         }
 
