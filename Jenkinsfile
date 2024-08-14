@@ -21,7 +21,7 @@ pipeline {
             steps {
                 script{
                     sh """
-                        sshpass -p 'zap' ssh -o StrictHostKeyChecking=no zap@172.31.12.108'
+                        sshpass -p 'zap' ssh -o StrictHostKeyChecking=no zap@172.31.12.108 '
                         ls -a
                         '
                     """
