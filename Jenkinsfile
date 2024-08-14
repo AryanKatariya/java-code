@@ -19,15 +19,17 @@ pipeline {
 
         stage ('DAST - OWASP ZAP') {
             steps {
-                def username = 'dockeradmin'
-                def password = 'docker'
-                def CONTAINER_NAME = 'devops-container'
+                script{
+                    def username = 'dockeradmin'
+                    def password = 'docker'
+                    def CONTAINER_NAME = 'devops-container'
 
-                sh """
-                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 '
-                            ls -a
-                            '
-                """
+                    sh """
+                        sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 '
+                        ls -a
+                        '
+                    """
+                }
             }       
         }
 
