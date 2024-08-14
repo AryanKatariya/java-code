@@ -19,13 +19,14 @@ pipeline {
 
         stage ('DAST - OWASP ZAP') {
             steps {
-                script {
+                sshagent(['zap-ssh']) {
                     sh """
-                    sshpass -p 'zap' ssh -o StrictHostKeyChecking=no zap@172.31.12.108 'ls -a'
+                    ssh -o StrictHostKeyChecking=no zap@172.31.12.108 'ls -a'
                     """
                 }
             }
         }
+
 
 
         stage('Checkout from SCM') {
