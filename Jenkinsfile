@@ -17,6 +17,14 @@ pipeline {
             }
         }
 
+        stage ('DAST - OWASP ZAP') {
+            steps {
+                sshagent(['dast-server']) {
+                    sh 'ssh -o  StrictHostKeyChecking=no ubuntu@172.31.12.108 "ls -a" '
+                }      
+            }       
+        }
+
         stage('Checkout from SCM') {
             steps {
                 git branch: 'main', credentialsId: 'github_token', url: 'https://github.com/AryanKatariya/java-code.git'
