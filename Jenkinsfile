@@ -60,7 +60,7 @@ pipeline {
                     curl -X POST "http://15.206.72.41:8080/api/v2/import-scan/" \
                     -H "Authorization: Token ${API_KEY}" \
                     -F "file=@dependency-check-report.xml" \
-                    -F "scan_type=Nessus" \
+                    -F "scan_type=Dependency Check Scan" \
                     -F "engagement=1" \
                     -F "version=1.0"
                 '''
