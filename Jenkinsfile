@@ -8,6 +8,7 @@ pipeline {
 
     environment {
         GITHUB_TOKEN = credentials('github_token')
+        API_KEY = credentials('dojo-api')
     }
 
     stages {
@@ -17,15 +18,15 @@ pipeline {
             }
         }
 
-        stage ('DAST - OWASP ZAP') {
-            steps {
-                sshagent(['zap-ssh']) {
-                    sh """
-                    ssh -o StrictHostKeyChecking=no zap@172.31.12.108 'ls -a'
-                    """
-                }
-            }
-        }
+//        stage ('DAST - OWASP ZAP') {
+//            steps {
+//                sshagent(['zap-ssh']) {
+//                    sh """
+//                    ssh -o StrictHostKeyChecking=no zap@172.31.12.108 'ls -a'
+//                    """
+//                }
+//            }
+//        }
 
 
 
@@ -53,47 +54,61 @@ pipeline {
             }
         }
 
-        stage ('SAST - SonarQube') {
+        stage('Upload to DefectDojo') {
             steps {
-                withSonarQubeEnv('sonar') {
-                sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src'
-                }
+                sh '''
+                    curl -X POST "http://15.206.72.41:8080/api/v2/import-scan/" \
+                    -H "Authorization: Token ${API_KEY}" \
+                    -F "file=@dependency-check-report.xml" \
+                    -F "scan_type=Dependency-Check" \
+                    -F "engagement=1" \
+                    -F "version=1.0"
+                '''
             }
         }
 
-        stage('Build application') {
-            steps {
-                sh "mvn clean package"
-            }
-        }
-        stage('Test application') {
-            steps {
-                sh "mvn test"
-            }
-        }
-        stage('Deploy to server') {
-            steps {
-                script {
-                    def username = 'dockeradmin'
-                    def password = 'docker'
-                    def CONTAINER_NAME = 'devops-container'
-                    
-                    def warFile = 'webapp/target/*.war'
-                    sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
 
-                    sh """
-                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 '
-                            docker stop devops-container
-                            docker rm devops-container
-                            docker pull tomcat:8.0 &&
-                            docker run --name devops-container -d -p 8080:8080 tomcat:8.0 &&
-                            docker cp ./*.war devops-container:/usr/local/tomcat/webapps/webapp.war &&
-                            docker restart devops-container
-                            '
-                        """
-                    }
-                }
-        }
+
+//        stage ('SAST - SonarQube') {
+//            steps {
+//                withSonarQubeEnv('sonar') {
+//                sh 'mvn clean sonar:sonar -Dsonar.java.binaries=src'
+//                }
+//            }
+//        }
+
+//        stage('Build application') {
+//            steps {
+//                sh "mvn clean package"
+//            }
+//        }
+//        stage('Test application') {
+//            steps {
+//                sh "mvn test"
+//            }
+//        }
+//        stage('Deploy to server') {
+//            steps {
+//                script {
+//                    def username = 'dockeradmin'
+//                    def password = 'docker'
+//                    def CONTAINER_NAME = 'devops-container'                   
+//                    def warFile = 'webapp/target/*.war'
+//                      sh "sshpass -p ${password} scp -o StrictHostKeyChecking=no ${warFile} ${username}@172.31.44.98:/home/dockeradmin"
+
+//                    sh """
+//                            sshpass -p 'docker' ssh -o StrictHostKeyChecking=no dockeradmin@172.31.44.98 '
+//                            docker stop devops-container
+//                            docker rm devops-container
+//                            docker pull tomcat:8.0 &&
+//                            docker run --name devops-container -d -p 8080:8080 tomcat:8.0 &&
+//                            docker cp ./*.war devops-container:/usr/local/tomcat/webapps/webapp.war &&
+//                            docker restart devops-container
+//                            '
+//                        """
+//                    }
+//                }
+//        }
     }    
 }
 
